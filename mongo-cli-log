@@ -1,0 +1,9 @@
+
+use 3Dapps
+db.createCollection("apps")
+db.apps.insert({name: "Blender", initialReleaseDate: new Date(1994, 1, 2), movies: [{"_id" : new ObjectId(), title: "Spring", trailer: "https://www.youtube.com/watch?v=WhWc3b3KhnY"},{"_id" : new ObjectId(), title: "Sintel", trailer: "https://www.youtube.com/watch?v=c2gB83g_HSc"},{"_id" : new ObjectId(), title: "Agent 327: Operation Barbershop", trailer: "https://www.youtube.com/watch?v=mN0zPOpADL4"}]})
+db.apps.insert({name: "Autodesk Maya",initialReleaseDate: new Date(1998, 2, 1), movies: [ {"_id" : new ObjectId(), title: "The Lord of the Rings: The Two Towers", trailer: "https://www.youtube.com/watch?v=LbfMDwc4azU"},{"_id" : new ObjectId(), title: "Star Wars: Episode II – Attack of the Clones", trailer: "https://www.youtube.com/watch?v=gYbW1F_c9eM"},{"_id" : new ObjectId(), title: "Ice Age", trailer: "https://www.youtube.com/watch?v=i4noiCRJRoE"}]})
+
+mongodump --db 3Dapps --gzip dump/
+mongorestore --nsInclude=3Dapps.apps -- gzip dump/
+mongorestore --gzip dump/

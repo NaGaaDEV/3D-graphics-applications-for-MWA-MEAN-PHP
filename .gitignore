@@ -1,5 +1,5 @@
-mongo-cli.log
-db_dump.zip
+#mongo-cli-log
+#db_dump.zip
 package-lock.json
 .DS_Store
 # Logs
