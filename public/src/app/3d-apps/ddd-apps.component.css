@@ -1,0 +1,19 @@
+.border { border-bottom: 5px solid #FCBA04; }
+
+.content {
+    display: flex;
+}
+
+.logo { 
+    height: 100px;
+    max-width: 100px;
+}
+
+.info {
+    padding-left: 6px;
+    justify-content: space-between;
+}
+
+.logo img {
+    width: 100%;
+}

@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "startBackend": "npm start",
+    "startFrontend": "cd ./public && npm start",
+    "startBoth": "npm-run-all --parallel startBackend startFrontend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

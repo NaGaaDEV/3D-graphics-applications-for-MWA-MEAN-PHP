@@ -14,6 +14,7 @@ const appSchema = mongoose.Schema({
         required: true
     },
     initialReleaseDate: Date,
+    logo: String,
     movies: {
         type: [movieSchema]},
         default: []

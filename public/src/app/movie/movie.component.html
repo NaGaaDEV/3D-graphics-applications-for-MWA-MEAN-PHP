@@ -1,0 +1,9 @@
+<ng-container *ngIf="movie">
+    <h1 class="main-title">{{movie.title}}</h1>
+    <div class="card border">
+        <div class="content">
+                <img src="https://img.youtube.com/vi/{{movie.trailer}}/mqdefault.jpg" alt="Happy">
+                <a class="overlay" href="https://www.youtube.com/watch?v={{movie.trailer}}">&#9658;</a>
+        </div>
+    </div>
+</ng-container>

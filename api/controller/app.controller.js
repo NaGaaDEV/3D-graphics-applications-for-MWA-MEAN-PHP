@@ -50,12 +50,6 @@ module.exports.getOne = function(req, res) {
 
 module.exports.addOne = function(req, res) {
     if(req.body && req.body.name) {
-        const newApp = {
-            name: req.body.name,
-            initialReleaseDate: new Date(req.body.initialReleaseDate),
-            movies: [req.body.movies]
-        }
-
         const respond = function(err, result) {
             if(err) {
                 res.status(500).json({message: err})
