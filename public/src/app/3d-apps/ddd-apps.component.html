@@ -1,7 +1,12 @@
 <h1 class="main-title">3D Computer Graphics Applications</h1>
 
+<div class="container action-bar">
+    <app-search></app-search>
+    <button routerLink="manage">+ Add App</button>
+</div>
+
 <div *ngFor="let app of apps" class="card border">
-    <div [routerLink]="['apps', app._id]" routerLinkActive="router-link-active"  class="content">
+    <div [routerLink]="[app._id]" routerLinkActive="router-link-active"  class="content">
         <div class="logo">
             <img src="{{app.logo}}" alt="{{app.name}} logo">
         </div>
@@ -11,4 +16,3 @@
         </div>
     </div>
 </div>
-

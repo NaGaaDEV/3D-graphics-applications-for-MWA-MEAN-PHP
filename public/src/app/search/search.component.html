@@ -1,0 +1,10 @@
+<form #searchForm="ngForm" (ngSubmit)="searchApp(searchForm)">
+    <input name="name" type="text" placeholder="Search by title" ngModel>
+    <button type="submit">Search</button>
+</form>
+
+<ng-container *ngIf="searchResult">
+    <h3 class="result-text">Result</h3>
+    <a *ngFor="let app of searchResult" [routerLink]="['/apps', app._id]">{{app.name}}</a>
+    <hr>
+</ng-container>

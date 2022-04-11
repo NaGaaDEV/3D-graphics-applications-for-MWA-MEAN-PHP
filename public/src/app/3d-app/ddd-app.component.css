@@ -19,3 +19,13 @@
     width: 100%;
 }
 
+.sub-title {
+    text-align: center;
+}
+
+small.edit {
+    font-size: 20px;
+    cursor: pointer;
+    color: #dc2f02;
+}
+

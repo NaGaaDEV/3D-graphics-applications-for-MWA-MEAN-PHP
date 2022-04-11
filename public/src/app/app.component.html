@@ -1,1 +1,7 @@
+<div class="nav">
+    <a [routerLink]="['/apps']" routerLinkActive="router-link-active">Home</a> • 
+    <a (click)="onBack()" routerLinkActive="router-link-active">Back</a>    
+</div>
+
 <router-outlet></router-outlet>
+<app-footer></app-footer>

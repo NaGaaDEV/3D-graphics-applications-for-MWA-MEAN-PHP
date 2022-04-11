@@ -6,6 +6,7 @@ body {
     background-color: #f2f8ff;
     font-family: 'Open Sans', sans-serif;
     height: 100vh;
+    margin: 0;
 }
 
 .container {

@@ -1,0 +1,17 @@
+<h1 *ngIf="!editMode" class="main-title">Add a 3D application</h1>
+<h1 *ngIf="editMode" class="main-title">Edit application</h1>
+
+<div class="card border">
+    <div class="content">
+        <form [formGroup]="appForm" (ngSubmit)="onSave()">
+            <strong>Name: </strong> <input formControlName="name" type="text"> <br>
+            <strong>initial Release Date: </strong> <input formControlName="initialReleaseDate" type="text"> <br>
+            <strong>Logo link: </strong> <input formControlName="logo" type="text"> <br>
+            <div class="action">
+                <button type="submit" [disabled]="saving" class="btn-save">Save</button> <br>
+                <button (click)="onDelete()" [disabled]="!editMode" class="btn-delete">Delete</button> <br>                
+            </div>
+            <ng-container *ngIf="savingMessage"><strong class="savingMessage">{{savingMessage}}</strong></ng-container>
+        </form>
+    </div>
+</div>

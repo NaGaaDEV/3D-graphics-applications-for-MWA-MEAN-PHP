@@ -1,13 +1,16 @@
 <ng-container *ngIf="app">
-    <h1 class="main-title">Movies made with {{app.name}}</h1>
-    <div *ngFor="let movie of app.movies" class="card border">
-        <div [routerLink]="['movies', movie._id]" routerLinkActive="router-link-active"  class="content">
-            <div class="trailer">
-                <img src="https://img.youtube.com/vi/{{movie.trailer}}/sddefault.jpg" alt="Happy">
-            </div>
-            <div class="info">
-                <h2>{{movie.title}}</h2>
+    <div class="app-header">
+        <h1 class="main-title">{{app.name}} <small [routerLink]="['/apps/manage', app._id]" class="edit">✎ edit</small></h1>
+    </div>
+        <h3 class="sub-title">Movies made with {{app.name}}</h3>
+        <div *ngFor="let movie of app.movies" class="card border">
+            <div [routerLink]="['movies', movie._id]" routerLinkActive="router-link-active"  class="content">
+                <div class="trailer">
+                    <img src="https://img.youtube.com/vi/{{movie.trailer}}/sddefault.jpg" alt="Happy">
+                </div>
+                <div class="info">
+                    <h2>{{movie.title}}</h2>
+                </div>
             </div>
         </div>
-    </div>
 </ng-container>
