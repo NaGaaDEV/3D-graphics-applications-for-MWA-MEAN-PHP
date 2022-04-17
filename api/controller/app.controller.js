@@ -9,14 +9,10 @@ module.exports.getAll = function(req, res) {
     offset = parseInt(req.query.offset) > 0 ? parseInt(req.query.offset) : offset;
 
     let query = req.query.name ? {name: req.query.name } : {};
-    const respond = function(err, result) {
-        if(err) {
-            res.status(500).json({message: err})
-        } else {
-            res.status(200).json(result);
-        }
-    }
-    app.find(query).skip(offset).limit(count).exec((err, result) => respond(err, result));
+
+    const respondResolved = (result) => res.status(200).json(result);
+    const respondRejected = (err) => res.status(500).json({message: err});
+    app.find(query).skip(offset).limit(count).exec().then((resolve) => respondResolved(resolve)).catch((reject) => respondRejected(reject));
 }
 
 module.exports.getOne = function(req, res) {
@@ -24,42 +20,40 @@ module.exports.getOne = function(req, res) {
     const appId = req.params.appId;
     if(!appId) {
         response.status = 400;
-        response.message = process.env.MSG_APP_ID_REQUIRED;
+        response.message = {message: process.env.MSG_APP_ID_REQUIRED};
     } else if(!mongoose.isValidObjectId(appId)) {
         response.status = 400;
-        response.message = process.env.MSG_INVALID_APP_ID;
+        response.message = {message: process.env.MSG_INVALID_APP_ID};
     }
-
-    const respond = function(err, result) {
-        if(err) {
-            response.status = 500;
-            response.message = {message: err};
-        } else if (!result) {
+    
+    const respond = () => res.status(response.status).json(response.message);
+    
+    const respondResolved = (result) => {
+        if (!result) {
             response.status = 404;
             response.message = {message: process.env.MSG_APP_NOT_FOUND};
         } else {
             response.message = result;
         }
-        res.status(response.status).json(response.message);
+        respond();
     }
-
+    const respondRejected = (err) => {
+        response.status = 500;
+        response.message = {message: err};
+        respond();
+    }
     if(response.status == 200) {
-        app.findById(appId).exec((err, result) => respond(err, result));
+        app.findById(appId).exec().then((resolve) => respondResolved(resolve)).catch((reject) => respondRejected(reject));
     } else {
-        res.status(response.status).json({message: response.message});
+        respond();
     }
 }
 
 module.exports.addOne = function(req, res) {
     if(req.body && req.body.name) {
-        const respond = function(err, result) {
-            if(err) {
-                res.status(500).json({message: err})
-            } else {
-                res.status(201).json({message: process.env.MSG_APP_ADDED});
-            }
-        }
-        app.create(req.body, (err, result) => respond(err, result))
+        const respondResolved = (result) => res.status(201).json(result);
+        const respondRejected = (err) => res.status(500).json({message: err});
+        app.create(req.body).then((resolve) => respondResolved(resolve)).catch((reject) => respondRejected(reject));
     } else {
         res.status(400).json({message: process.env.MSG_APP_NAME_REQUIRED})
     }
@@ -76,20 +70,22 @@ module.exports.replaceOne = function(req, res) {
         response.message = {message: process.env.MSG_INVALID_APP_ID}
     }
 
-    const respond = function(err, result) {
-        if(err) {
-            response.status = 500;
-            response.message = {message: err};
-        } else {
-            response.status = 200;
-            response.message = {message: result};
-        }
-        res.status(response.status).json(response.message);
+    const respond = () => res.status(response.status).json(response.message);
+
+    const respondResolved = (result) => {
+        response.status = 200;
+        response.message = result;
+        respond();
+    }
+    const respondRejected = (err) => {
+        response.status = 500;
+        response.message = {message: err};
+        respond();
     }
     if(response.status == 200) {
-        app.findOneAndReplace(appId, req.body, {new: true}).exec((err, result) => respond(err, result));
+        app.findOneAndReplace(appId, req.body, {new: true}).exec().then((resolve) => respondResolved(resolve)).catch((reject) => respondRejected(reject));
     } else {
-        res.status(response.status).json({message: response.message});
+        respond();
     }
 }
 
@@ -103,22 +99,24 @@ module.exports.updateOne = function(req, res) {
         response.status = 400;
         response.message = {message: process.env.MSG_INVALID_APP_ID}
     }
-
-    const respond = function(err, result) {
-        if(err) {
-            response.status = 500;
-            response.message = {message: err};
-        } else {
-            response.status = 200;
-            response.message = {message: result};
-        }
-        res.status(response.status).json(response.message);
+    
+    const respond = () => res.status(response.status).json(response.message);
+    
+    const respondResolved = (result) => {
+        response.status = 200;
+        response.message = result;
+        respond();
+    }
+    const respondRejected = (err) => {
+        response.status = 500;
+        response.message = {message: err};
+        respond();
     }
     if(response.status == 200) {
         if(req.body._id) { delete req.body._id; }
-        app.findByIdAndUpdate(appId, req.body, {new: true}).exec((err, result) => respond(err, result));
+        app.findByIdAndUpdate(appId, req.body, {new: true}).exec().then((resolve) => respondResolved(resolve)).catch((reject) => respondRejected(reject));
     } else {
-        res.status(response.status).json({message: response.message});
+        respond();
     }
 }
 
@@ -133,22 +131,26 @@ module.exports.deleteOne = function(req, res) {
         response.message = {message: process.env.MSG_INVALID_APP_ID}
     }
 
-    const respond = function(err, result) {
-        if(err) {
-            response.status = 500;
-            response.message = {message: err};
-        } else if(!result) {
-            response.status = 400;
+    const respond = () => res.status(response.status).json(response.message);
+    
+    const respondResolved = (result) => {
+        if (!result) {
+            response.status = 404;
             response.message = {message: process.env.MSG_APP_NOT_FOUND};
         } else {
             response.status = 204;
-            response.message = {message: process.env.MSG_APP_DELETED};
+            response.message = result;
         }
-        res.status(response.status).json(response.message);
+        respond();
+    }
+    const respondRejected = (err) => {
+        response.status = 500;
+        response.message = {message: err};
+        respond();
     }
     if(response.status == 200) {
-        app.findByIdAndDelete(appId).exec((err, result) => respond(err, result));
+        app.findByIdAndDelete(appId).exec().then((resolve) => respondResolved(resolve)).catch((reject) => respondRejected(reject));
     } else {
-        res.status(response.status).json({message: response.message});
+        respond();
     }
 }

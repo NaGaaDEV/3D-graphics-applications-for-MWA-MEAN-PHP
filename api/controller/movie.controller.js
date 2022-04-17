@@ -7,22 +7,17 @@ module.exports.getAll = function(req, res) {
     const appId = req.params.appId;
     if(!appId) {
         response.status = 400;
-        response.message = process.env.MSG_APP_ID_REQUIRED;
+        response.message = {message: process.env.MSG_APP_ID_REQUIRED};
     } else if(!mongoose.isValidObjectId(appId)) {
         response.status = 400;
-        response.message = process.env.MSG_INVALID_APP_ID;
+        response.message = {message: process.env.MSG_INVALID_APP_ID};
     }
 
-    const respond = function(err, result) {
-        if(err) {
-            res.status(500).json({message: err})
-        } else {
-            res.status(200).json(result.movies);
-        }      
-    }
+    const respondResolved = (result) => res.status(200).json(result);
+    const respondRejected = (err) => res.status(500).json({message: err});
 
     if(response.status == 200) {
-        app.findById(appId).select("movies").exec((err, result) => respond(err, result));     
+        app.findById(appId).select("movies").exec().then((resolve) => respondResolved(resolve.movies)).catch((reject) => respondRejected(reject));
     } else {
         res.status(response.status).json({message: response.message});
     }   
@@ -34,32 +29,38 @@ module.exports.getOne = function(req, res) {
     const movieId = req.params.movieId;
     if(!appId) {
         response.status = 400;
-        response.message = process.env.MSG_APP_ID_REQUIRED;
+        response.message = {message: process.env.MSG_APP_ID_REQUIRED};
     } else if(!movieId) {
         response.status = 400;
-        response.message = process.env.MSG_MOVIE_ID_REQUIRED;
+        response.message = {message: process.env.MSG_MOVIE_ID_REQUIRED};
     } else if(!mongoose.isValidObjectId(appId)) {
         response.status = 400;
-        response.message = process.env.MSG_INVALID_APP_ID;
+        response.message = {message: process.env.MSG_INVALID_APP_ID};
     } else if(!mongoose.isValidObjectId(movieId)) {
         response.status = 400;
-        response.message = process.env.MSG_INVALID_MOVIE_ID;
+        response.message = {message: process.env.MSG_INVALID_MOVIE_ID};
     }
 
-    const respond = function(err, result) {
-        if(err) {
-            res.status(500).json({message: err})
-        } else if (!result || !result.movies || !result.movies.id(movieId)) {
-            res.status(404).json({message: process.env.MSG_MOVIE_NOT_FOUND});
+    const respond = () => res.status(response.status).json(response.message);
+    
+    const respondResolved = (result) => {
+        if (!result || !result.id(movieId)) {
+            response.status = 404;
+            response.message = {message: process.env.MSG_MOVIE_NOT_FOUND};
         } else {
-            res.status(200).json(result.movies.id(movieId));
-        }      
+            response.message = result.id(movieId);
+        }
+        respond();
     }
-
+    const respondRejected = (err) => {
+        response.status = 500;
+        response.message = {message: err};
+        respond();
+    }
     if(response.status == 200) {
-        app.findById(appId).select("movies").exec((err, result) => respond(err, result));     
+        app.findById(appId).select("movies").exec().then((resolve) => respondResolved(resolve.movies)).catch((reject) => respondRejected(reject));
     } else {
-        res.status(response.status).json({message: response.message});
+        respond();
     }
 }
 

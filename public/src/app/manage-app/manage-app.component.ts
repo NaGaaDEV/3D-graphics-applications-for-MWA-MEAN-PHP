@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -19,15 +19,13 @@ export class ManageAppComponent implements OnInit {
   saving:boolean = false;
   savingMessage:string = "";
 
-  editMode:boolean = false;
   appId!:string;
   app!:App;
 
-  constructor(private fb:FormBuilder, private appsDataService:AppsDataService, private router:ActivatedRoute, private navigator:Router) { }
+  constructor(private fb:FormBuilder, private appsDataService:AppsDataService, private router:ActivatedRoute, private navigator:Router, private location:Location) { }
 
   ngOnInit(): void {
     this.appId = this.router.snapshot.params["appId"];
-    this.editMode = this.appId ? true : this.editMode;
     
     this.appForm = this.fb.group({
       name: this.fb.control(''),
@@ -38,7 +36,7 @@ export class ManageAppComponent implements OnInit {
         trailer: this.fb.control('')  
       })
     });
-    this.getApp();
+    if(this.appId) { this.getApp(); }
   }
 
   onAdd():void {
@@ -46,6 +44,11 @@ export class ManageAppComponent implements OnInit {
     this.saving = true;
     this.appForm.value.movies = this.appForm.value.movies || "";
     this.appsDataService.addOneApp(this.appForm.value).subscribe({
+      next: (app) => {
+        this.app = app;
+        this.appId = app._id;
+        this.location.replaceState("/apps/manage/"+this.appId);
+      },
       error: err => {
         this.saving = false;
         this.savingMessage = "There was problem saving the app"
@@ -83,7 +86,6 @@ export class ManageAppComponent implements OnInit {
         next: app => this.app = app,
         error: err => console.log("Service error", err),
         complete: () => {
-          console.log("App deleted");
           this.navigator.navigate(['/apps']);
         }     
       });
