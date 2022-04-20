@@ -49,13 +49,6 @@ input {
     cursor: not-allowed;
 }
 
-.card {
-    cursor:default;
-}
-.card.inactive:hover {
-    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-}
-
 .savingMessage {
     margin-top: 4px;
 }

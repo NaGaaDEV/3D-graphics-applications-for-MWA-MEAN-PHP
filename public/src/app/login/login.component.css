@@ -1,0 +1,32 @@
+.border { border-bottom: 5px solid #FCBA04; }
+
+.content {
+    padding: 10%;
+}
+
+input {
+    margin: 5px 0;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 25px;
+}
+input:focus {
+    outline: 2px solid #FCBA04;
+}
+
+.action {
+    display: flex;
+    justify-content: space-evenly;
+}
+.btn-login {
+    height: 30px;
+    background-color: #FCBA04;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    align-self: start;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 0 30px;
+    margin-bottom: 10px;
+}

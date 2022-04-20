@@ -1,0 +1,11 @@
+<h1 class="main-title">Login</h1>
+
+<div class="card border inactive">
+    <div class="content">
+        <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)">
+            <input name="username" type="text" placeholder="Username" ngModel> <br>
+            <input name="password" type="password" placeholder="Password" ngModel> <br>
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+    </div>
+</div>

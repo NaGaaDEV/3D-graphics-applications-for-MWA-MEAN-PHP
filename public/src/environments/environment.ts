@@ -5,12 +5,20 @@
 export const environment = {
   production: true,
   BASE_API_URL: "add a base api url",
+  APPS_API_ENDPOINT: "add apps endpoint",
+  MOVIES_API_ENDPOINT: "add movies endpoint",
+  USER_API_ENDPOINT: "add user endpoint",
+  REGISTER_API_ENDPOINT: "add registration endpoint",
+
+  MSG_USER_REGISTERED: "",
+  MSG_ERROR_REGISTERING_USER: "",
+
+  MSG_APP_SAVED: "",
+  MSG_ERROR_SAVING_APP: "",
+  MSG_SAVING: "",
 
   MSG_SERVICE_ERROR: "",
   MSG_APP_RETRIEVED: "",
-  MSG_SAVING: "",
-  MSG_APP_SAVED: "",
-  MSG_ERROR_SAVING_APP: "",
   MSG_MOVIE_RETRIEVED: "",
   MSG_SEARCH_COMPLETE: "",
 };

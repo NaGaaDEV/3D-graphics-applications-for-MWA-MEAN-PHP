@@ -78,7 +78,6 @@ export class ManageAppComponent implements OnInit {
   private _onAppServiceWriteNext = (app: App) => {
     this.app = app;
     this.appId = app._id;
-    this.location.replaceState("/apps/manage/"+this.appId);
   };
   private _onAppServiceWriteError = (err: any) => {
     this.saving = false;
@@ -87,6 +86,7 @@ export class ManageAppComponent implements OnInit {
   private _onAppServiceWriteComplete = () => {
     this.saving = false;
     this.savingMessage = environment.MSG_APP_SAVED;
+    this.location.replaceState("/apps/manage/"+this.appId);
   };
 
   onDelete():void {

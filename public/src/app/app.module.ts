@@ -12,6 +12,9 @@ import { SearchComponent } from './search/search.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ManageAppComponent } from './manage-app/manage-app.component';
 import { FooterComponent } from './footer/footer.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterUserComponent } from './register-user/register-user.component';
+import { NavComponent } from './nav/nav.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { FooterComponent } from './footer/footer.component';
     SearchComponent,
     PageNotFoundComponent,
     ManageAppComponent,
-    FooterComponent
+    FooterComponent,
+    LoginComponent,
+    RegisterUserComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +42,8 @@ import { FooterComponent } from './footer/footer.component';
       {path:"apps/manage/:appId", component: ManageAppComponent},
       {path:"apps/:appId", component: DDDAppComponent},
       {path:"apps/:appId/movies/:movieId", component: MovieComponent},
+      {path:"login", component: LoginComponent},
+      {path:"register", component: RegisterUserComponent},
       {path: '**', component: PageNotFoundComponent}
     ])
   ],

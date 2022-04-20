@@ -1,0 +1,36 @@
+.border { border-bottom: 5px solid #94d2bd; }
+
+.content {
+    padding: 10%;
+}
+
+input {
+    margin: 5px 0;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 25px;
+}
+input:focus {
+    outline: 2px solid #94d2bd;
+}
+
+.action {
+    display: flex;
+    justify-content: space-evenly;
+}
+.btn-register {
+    height: 30px;
+    background-color: #94d2bd;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    align-self: start;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 0 30px;
+    margin-bottom: 10px;
+}
+.btn-register:disabled {
+    background-color: #9faca7;
+    cursor: not-allowed;
+}
