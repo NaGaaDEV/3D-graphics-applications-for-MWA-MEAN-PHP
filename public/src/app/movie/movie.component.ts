@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { Movie } from '../app.model';
 import { AppsDataService } from '../apps-data.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-movie',
@@ -24,10 +25,13 @@ export class MovieComponent implements OnInit {
     const appId:string = this.router.snapshot.params["appId"];
     const movieId:string = this.router.snapshot.params["movieId"];
     this.appsDataService.getOneMovie(appId, movieId).subscribe({
-      next: movie => {this.movie = movie},
-      error: err => console.log("Service error", err),
-      complete: () => () => console.log("Movie retrieved")
+      next: movie => this._onGetAppsNext(movie),
+      error: err => this._onGetAppsError(err),
+      complete: () => this._onGetAppsComplete()
     });
   }
-
+  
+  private _onGetAppsNext = (movie: Movie) => this.movie = movie;
+  private _onGetAppsError = (err: any) => console.log(environment.MSG_SERVICE_ERROR, err);
+  private _onGetAppsComplete = () => console.log(environment.MSG_MOVIE_RETRIEVED);
 }

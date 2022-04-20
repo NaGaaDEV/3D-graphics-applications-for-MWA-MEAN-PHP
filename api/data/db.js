@@ -13,5 +13,7 @@ const endApplication = function(message, exitCode) {
     console.log(message);
     process.exit(exitCode);
 }
-process.on("SIGINT", () => mongoose.connection.close(endApplication(process.env.MSG_APP_TERMINATED), 0));
-process.on("SIGTERM", () => mongoose.connection.close(endApplication(process.env.MSG_APP_TERMINATED), 0));
+const closeDatabaseConnection = () => mongoose.connection.close(endApplication(process.env.MSG_APP_TERMINATED), 0);
+
+process.on("SIGINT", () => closeDatabaseConnection());
+process.on("SIGTERM", () => closeDatabaseConnection());

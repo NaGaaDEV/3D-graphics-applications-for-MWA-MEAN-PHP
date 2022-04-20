@@ -8,7 +8,7 @@ module.exports.getAll = function(req, res) {
     count = parseInt(req.query.count) < 10 ? parseInt(req.query.count) : count;
     offset = parseInt(req.query.offset) > 0 ? parseInt(req.query.offset) : offset;
 
-    let query = req.query.name ? {name: req.query.name } : {};
+    const query = req.query.name ? {name: {"$regex": req.query.name } } : {};
 
     const respondResolved = (result) => res.status(200).json(result);
     const respondRejected = (err) => res.status(500).json({message: err});

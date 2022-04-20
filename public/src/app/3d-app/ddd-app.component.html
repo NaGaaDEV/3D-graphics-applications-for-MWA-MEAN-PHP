@@ -2,6 +2,7 @@
     <div class="app-header">
         <h1 class="main-title">{{app.name}} <small [routerLink]="['/apps/manage', app._id]" class="edit">✎ edit</small></h1>
     </div>
+    <ng-container *ngIf="app.movies">
         <h3 class="sub-title">Movies made with {{app.name}}</h3>
         <div *ngFor="let movie of app.movies" class="card border">
             <div [routerLink]="['movies', movie._id]" routerLinkActive="router-link-active"  class="content">
@@ -13,4 +14,5 @@
                 </div>
             </div>
         </div>
+    </ng-container>
 </ng-container>

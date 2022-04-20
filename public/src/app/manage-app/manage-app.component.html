@@ -1,17 +1,53 @@
 <h1 *ngIf="!app" class="main-title">Add a 3D application</h1>
 <h1 *ngIf="app" class="main-title">Edit application</h1>
 
-<div class="card border">
+<div class="card border inactive">
     <div class="content">
         <form [formGroup]="appForm" (ngSubmit)="onSave()">
             <strong>Name: </strong> <input formControlName="name" type="text"> <br>
-            <strong>initial Release Date: </strong> <input formControlName="initialReleaseDate" type="text"> <br>
-            <strong>Logo link: </strong> <input formControlName="logo" type="text"> <br>
-            <div class="action">
-                <button type="submit" [disabled]="saving" class="btn-save">Save</button> <br>
-                <button (click)="onDelete()" [disabled]="!app" class="btn-delete">Delete</button> <br>                
-            </div>
-            <ng-container *ngIf="savingMessage"><strong class="savingMessage">{{savingMessage}}</strong></ng-container>
+            <strong>Initial Release Date: </strong> <input formControlName="initialReleaseDate" type="text"> <br>
+            <strong>Logo link: </strong> <input formControlName="logo" type="text">
         </form>
     </div>
+</div>
+
+<h3 class="sub-title">List of movies</h3>
+<div class="card border inactive">
+    <div class="content">
+        <div class="container action-bar">
+            <button (click)="onAddMovie()">+ Add Movie</button>
+        </div>
+        <ng-container [formGroup]="appForm">
+            <ng-container formArrayName="movies">
+                <ng-container *ngFor="let movieForm of movies.controls; let i=index">
+                    <div [formGroupName]="i" class="movie-input">
+                        <input type="text" formControlName="title" placeholder="Title">
+                        <input type="text" formControlName="trailer" placeholder="Youtube ID" maxlength="11" minlength="11">
+                        <input type="hidden" formControlName="_id">
+                        <span (click)="onDeleteMovie(i)">❌</span>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+        <ng-container [formGroup]="newMoviesForm">
+            <ng-container formArrayName="movies">
+                <ng-container *ngFor="let newMovieForm of newMovies.controls; let newIndex=index">
+                    <div [formGroupName]="newIndex" class="movie-input">
+                        <input type="text" formControlName="title" placeholder="Title">
+                        <input type="text" formControlName="trailer" placeholder="Youtube ID" maxlength="11" minlength="11">
+                        <span (click)="onDeleteNewMovie(newIndex)">❌</span>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
+<div class="card border inactive">
+    <form [formGroup]="appForm" (ngSubmit)="onSave()">
+        <div class="action">
+            <button type="submit" [disabled]="saving || !appForm.valid" class="btn-save">Save</button> <br>
+            <button (click)="onDelete()" [disabled]="!app" class="btn-delete">Delete</button> <br>                
+        </div>
+        <ng-container *ngIf="savingMessage"><strong class="savingMessage">{{savingMessage}}</strong></ng-container>
+    </form>
 </div>

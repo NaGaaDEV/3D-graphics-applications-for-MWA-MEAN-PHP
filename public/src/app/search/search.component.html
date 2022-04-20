@@ -3,8 +3,8 @@
     <button type="submit">Search</button>
 </form>
 
-<ng-container *ngIf="searchResult">
+<ng-container *ngIf="apps">
     <h3 class="result-text">Result</h3>
-    <a *ngFor="let app of searchResult" [routerLink]="['/apps', app._id]">{{app.name}}</a>
+    <a *ngFor="let app of apps" [routerLink]="['/apps', app._id]">{{app.name}}</a>
     <hr>
 </ng-container>

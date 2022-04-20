@@ -1,9 +1,10 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
+import { environment } from 'src/environments/environment';
 import { App } from '../app.model';
 import { AppsDataService } from '../apps-data.service';
 
@@ -16,11 +17,14 @@ import { AppsDataService } from '../apps-data.service';
 export class ManageAppComponent implements OnInit {
 
   appForm!:FormGroup;
-  saving:boolean = false;
-  savingMessage:string = "";
-
+  movieForm!:FormGroup;
+  newMoviesForm!:FormGroup;
+  
   appId!:string;
   app!:App;
+
+  saving:boolean = false;
+  savingMessage:string = "";
 
   constructor(private fb:FormBuilder, private appsDataService:AppsDataService, private router:ActivatedRoute, private navigator:Router, private location:Location) { }
 
@@ -28,66 +32,69 @@ export class ManageAppComponent implements OnInit {
     this.appId = this.router.snapshot.params["appId"];
     
     this.appForm = this.fb.group({
-      name: this.fb.control(''),
+      name: this.fb.control('', Validators.required),
       initialReleaseDate: this.fb.control(''),
       logo: this.fb.control(''),
-      movies: this.fb.group({
-        title: this.fb.control(''),
-        trailer: this.fb.control('')  
-      })
+      movies: this.fb.array([])
+    });
+    this.movieForm = this.fb.group({
+      _id: this.fb.control('', Validators.required),
+      title: this.fb.control('', Validators.required),
+      trailer: this.fb.control('', [Validators.minLength(11), Validators.maxLength(11)])  
+    });
+    this.newMoviesForm = this.fb.group({
+      movies: this.fb.array([])
     });
     if(this.appId) { this.getApp(); }
   }
 
   onAdd():void {
-    this.savingMessage = "Saving..."
+    this.savingMessage = environment.MSG_SAVING
     this.saving = true;
     this.appForm.value.movies = this.appForm.value.movies || "";
     this.appsDataService.addOneApp(this.appForm.value).subscribe({
-      next: (app) => {
-        this.app = app;
-        this.appId = app._id;
-        this.location.replaceState("/apps/manage/"+this.appId);
-      },
-      error: err => {
-        this.saving = false;
-        this.savingMessage = "There was problem saving the app"
-      },
-      complete: () => {
-        this.saving = false;
-        this.savingMessage = "The application has been saved"
-      }
+      next: (app) => this._onAppServiceWriteNext(app),
+      error: err => this._onAppServiceWriteError(err),
+      complete: () => this._onAppServiceWriteComplete()
     })
   }
 
   onUpdate():void {
-    this.savingMessage = "Saving..."
+    this.savingMessage = environment.MSG_SAVING;
     this.saving = true;
-    const patchedAppData = {...this.appForm.value, movies:this.app.movies};
-
+    
+    let patchedAppData = { ...this.app, ...this.appForm.value, movies:[...this.appForm.value.movies, ...this.newMovies.value] };
+    
     this.appsDataService.updateOneApp(this.appId, patchedAppData).subscribe({
-      error: err => {
-        this.saving = false;
-        this.savingMessage = "There was problem saving the app"
-      },
-      complete: () => {
-        this.saving = false;
-        this.savingMessage = "The application has been saved"
-      }
+      error: err => this._onAppServiceWriteError(err),
+      complete: () => this._onAppServiceWriteComplete()
     })
   }
 
   onSave():void {
     this.app ? this.onUpdate() : this.onAdd();
   }
+
+  private _onAppServiceWriteNext = (app: App) => {
+    this.app = app;
+    this.appId = app._id;
+    this.location.replaceState("/apps/manage/"+this.appId);
+  };
+  private _onAppServiceWriteError = (err: any) => {
+    this.saving = false;
+    this.savingMessage = environment.MSG_ERROR_SAVING_APP;
+  };
+  private _onAppServiceWriteComplete = () => {
+    this.saving = false;
+    this.savingMessage = environment.MSG_APP_SAVED;
+  };
+
   onDelete():void {
     if(this.appId) {
       this.appsDataService.deleteOneApp(this.appId).subscribe({
-        next: app => this.app = app,
-        error: err => console.log("Service error", err),
-        complete: () => {
-          this.navigator.navigate(['/apps']);
-        }     
+        next: app => this._onAppServiceNext(app),
+        error: err => this._onAppServiceError(err),
+        complete: () => this.navigator.navigate(['/apps'])
       });
     }
   }
@@ -95,13 +102,43 @@ export class ManageAppComponent implements OnInit {
   getApp():void {
     const appId:string = this.router.snapshot.params["appId"];
     this.appsDataService.getOneApp(appId).subscribe({
-      next: app => this.app = app,
-      error: err => console.log("Service error", err),
+      next: app => this._onAppServiceNext(app),
+      error: err => this._onAppServiceError(err),
       complete: () => {
-        console.log("App retrieved");
-        this.appForm.patchValue(this.app);
+        this._onAppServiceComplete();
+        this.patchForm();
       }     
     });
+  }
+
+  private _onAppServiceNext = (app: App) => this.app = app;
+  private _onAppServiceError = (err: any) => console.log(environment.MSG_SERVICE_ERROR, err);
+  private _onAppServiceComplete = () => console.log(environment.MSG_APP_RETRIEVED);
+
+  patchForm():void {
+    this.appForm.patchValue(this.app);
+    this.app.movies.forEach( movie => this.movies.push(this.fb.group({_id: movie._id, title: movie.title, trailer: movie.trailer})) );
+  }
+
+  onAddMovie():void {
+    const newMovieForm = this.fb.group({
+        title: this.fb.control('', Validators.required),
+        trailer: this.fb.control('', [Validators.minLength(11), Validators.maxLength(11)])  
+    });
+    this.newMovies.push(newMovieForm);
+  }
+  onDeleteMovie(index:number):void {
+    this.movies.removeAt(index);
+  }
+  onDeleteNewMovie(index:number):void {
+    this.newMovies.removeAt(index);
+  }
+
+  get movies() : FormArray {
+    return this.appForm.controls["movies"] as FormArray;
+  }
+  get newMovies() : FormArray {
+    return this.newMoviesForm.controls["movies"] as FormArray;
   }
 
 }

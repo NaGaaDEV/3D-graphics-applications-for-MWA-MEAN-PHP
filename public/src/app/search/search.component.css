@@ -15,3 +15,7 @@ button {
 .result-text {
     padding: 3px 0;
 }
+
+input[type="text"]:focus {
+    outline: 2px solid #FCBA04;
+}

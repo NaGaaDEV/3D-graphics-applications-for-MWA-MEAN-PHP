@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { environment } from 'src/environments/environment';
 import { App } from '../app.model';
 import { AppsDataService } from '../apps-data.service';
 
@@ -21,9 +23,13 @@ export class DDDAppComponent implements OnInit {
   getApp():void {
     const appId:string = this.router.snapshot.params["appId"];
     this.appsDataService.getOneApp(appId).subscribe({
-      next: app => this.app = app,
-      error: err => console.log("Service error", err),
-      complete: () => console.log("App retrieved")     
+      next: app => this._onGetAppNext(app),
+      error: err => this._onGetAppError(err),
+      complete: () => this._onGetAppComplete()
     });
   }
+  
+  private _onGetAppNext = (app: App) => this.app = app;
+  private _onGetAppError = (err: any) => console.log(environment.MSG_SERVICE_ERROR, err);
+  private _onGetAppComplete = () => console.log(environment.MSG_APP_RETRIEVED);
 }

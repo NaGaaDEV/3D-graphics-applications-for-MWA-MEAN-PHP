@@ -3,8 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  BASE_API_URL: "add a base api url"
+  production: true,
+  BASE_API_URL: "add a base api url",
+
+  MSG_SERVICE_ERROR: "",
+  MSG_APP_RETRIEVED: "",
+  MSG_SAVING: "",
+  MSG_APP_SAVED: "",
+  MSG_ERROR_SAVING_APP: "",
+  MSG_MOVIE_RETRIEVED: "",
+  MSG_SEARCH_COMPLETE: "",
 };
 
 /*

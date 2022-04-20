@@ -15,12 +15,8 @@ router.route("/apps/:appId")
 
 router.route("/apps/:appId/movies")
 .get(movieController.getAll)
-.post(movieController.addOne)
 
 router.route("/apps/:appId/movies/:movieId")
 .get(movieController.getOne)
-.put(movieController.replaceOne)
-.patch(movieController.updateOne)
-.delete(movieController.deleteOne)
 
 module.exports = router;
