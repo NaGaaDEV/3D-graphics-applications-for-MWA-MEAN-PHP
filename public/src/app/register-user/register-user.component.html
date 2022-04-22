@@ -1,3 +1,4 @@
+<app-message-alert [message]="message"></app-message-alert>
 <h1 class="main-title">User registration</h1>
 
 <div class="card border inactive">
@@ -6,8 +7,8 @@
             <input name="name" type="text" placeholder="Name" ngModel> <br>
             <input name="username" type="text" placeholder="Username" ngModel> <br>
             <input name="password" type="password" placeholder="Password" ngModel> <br>
-            <input name="repeatPassword" type="password" placeholder="Repeat password" ngModel> <br>
-            <button type="submit" class="btn-register" [disabled]="registrationForm.control.value.password != registrationForm.control.value.repeatPassword">Register</button>
+            <input name="confirmPassword" type="password" placeholder="Confirm password" ngModel> <br>
+            <button type="submit" class="btn-register" [disabled]="registrationForm.control.value.password != registrationForm.control.value.confirmPassword">Register</button>
         </form>
     </div>
 </div>

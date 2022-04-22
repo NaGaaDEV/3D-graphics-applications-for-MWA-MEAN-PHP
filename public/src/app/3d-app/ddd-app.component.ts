@@ -33,6 +33,6 @@ export class DDDAppComponent implements OnInit {
   }
   
   private _onGetAppNext = (app: App) => this.app = app;
-  private _onGetAppError = (err: any) => console.log(environment.MSG_SERVICE_ERROR, err);
+  private _onGetAppError = (err: string) => console.log(environment.MSG_SERVICE_ERROR, err);
   private _onGetAppComplete = () => console.log(environment.MSG_APP_RETRIEVED);
 }

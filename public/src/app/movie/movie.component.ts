@@ -32,6 +32,6 @@ export class MovieComponent implements OnInit {
   }
   
   private _onGetAppsNext = (movie: Movie) => this.movie = movie;
-  private _onGetAppsError = (err: any) => console.log(environment.MSG_SERVICE_ERROR, err);
+  private _onGetAppsError = (err: string) => console.log(environment.MSG_SERVICE_ERROR, err);
   private _onGetAppsComplete = () => console.log(environment.MSG_MOVIE_RETRIEVED);
 }

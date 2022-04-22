@@ -56,13 +56,13 @@ export class ManageAppComponent implements OnInit {
   }
 
   onAdd():void {
-    this.message = environment.MSG_SAVING
+    this.message = environment.MSG_SAVING;
     this.saving = true;
-    this.appForm.value.movies = this.appForm.value.movies || "";
+    this.appForm.value.movies = this.newMovies.value || [];
     this.appsDataService.addOneApp(this.appForm.value).subscribe({
-      next: (app) => this._onAppServiceWriteNext(app),
-      error: err => this._onAppServiceWriteError(err),
-      complete: () => this._onAppServiceWriteComplete()
+      next: (app) => this._onAppAddNext(app),
+      error: err => this._onAppAddError(err),
+      complete: () => this._onAppAddComplete()
     })
   }
 
@@ -73,8 +73,8 @@ export class ManageAppComponent implements OnInit {
     let patchedAppData = { ...this.app, ...this.appForm.value, movies:[...this.appForm.value.movies, ...this.newMovies.value] };
     
     this.appsDataService.updateOneApp(this.appId, patchedAppData).subscribe({
-      error: err => this._onAppServiceWriteError(err),
-      complete: () => this._onAppServiceWriteComplete()
+      error: err => this._onAppAddError(err),
+      complete: () => this._onAppAddComplete()
     })
   }
 
@@ -82,15 +82,15 @@ export class ManageAppComponent implements OnInit {
     this.app ? this.onUpdate() : this.onAdd();
   }
 
-  private _onAppServiceWriteNext = (app: App) => {
+  private _onAppAddNext = (app: App) => {
     this.app = app;
     this.appId = app._id;
   };
-  private _onAppServiceWriteError = (err: any) => {
+  private _onAppAddError = (err: string) => {
     this.saving = false;
     this.message = environment.MSG_ERROR_SAVING_APP;
   };
-  private _onAppServiceWriteComplete = () => {
+  private _onAppAddComplete = () => {
     this.saving = false;
     this.message = environment.MSG_APP_SAVED;
     this.location.replaceState("/apps/manage/"+this.appId);
@@ -119,7 +119,7 @@ export class ManageAppComponent implements OnInit {
   }
 
   private _onAppServiceNext = (app: App) => this.app = app;
-  private _onAppServiceError = (err: any) => console.log(environment.MSG_SERVICE_ERROR, err);
+  private _onAppServiceError = (err: string) => console.log(environment.MSG_SERVICE_ERROR, err);
   private _onAppServiceComplete = () => console.log(environment.MSG_APP_RETRIEVED);
 
   patchForm():void {

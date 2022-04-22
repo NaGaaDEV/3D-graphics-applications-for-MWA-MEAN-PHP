@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Location } from '@angular/common'
+import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
 import { User } from '../user.model';
@@ -13,33 +13,48 @@ import { UsersDataService } from '../users-data.service';
 })
 export class RegisterUserComponent implements OnInit {
   registering:boolean = false;
-  registeringMessage:string = "";
+  message:string = "";
 
-  constructor(private usersDataService:UsersDataService, private location:Location) { }
+  constructor(private usersDataService:UsersDataService, private navigator:Router) { }
 
   ngOnInit(): void {
   }
 
   onRegister(form:NgForm): void {
-    const newUser:User = {
-      name: form.value.name,
-      username: form.value.username,
-      password: form.value.password,
+    if(this.isFormValid(form)) {
+      const newUser:User = {
+        name: form.value.name,
+        username: form.value.username,
+        password: form.value.password,
+      }
+      
+      this.usersDataService.registerUser(newUser).subscribe({
+        error: err => this._onUserServiceRegisterError(err),
+        complete: () => this._onUserServiceRegisterComplete()
+      });
     }
-    
-    this.usersDataService.registerUser(newUser).subscribe({
-      error: err => this._onUserServiceWriteError(err),
-      complete: () => this._onUserServiceWriteComplete()
-    })
   }
 
-  private _onUserServiceWriteError = (err: any) => {
+  private _onUserServiceRegisterError = (err: string) => {
     this.registering = false;
-    this.registeringMessage = environment.MSG_ERROR_REGISTERING_USER;
+    this.message = environment.MSG_ERROR_REGISTERING_USER;
   };
-  private _onUserServiceWriteComplete = () => {
+  private _onUserServiceRegisterComplete = () => {
     this.registering = false;
-    this.registeringMessage = environment.MSG_USER_REGISTERED
-    setTimeout(() => this.location.replaceState("/login"), 2000);
+    this.message = environment.MSG_USER_REGISTERED
+    setTimeout(() => this.navigator.navigate(['/login']), 2000);
   };
+
+  isFormValid(form:NgForm):boolean {
+    if(form.value.name && form.value.username && form.value.password && form.value.confirmPassword) {
+      if(form.value.password == form.value.confirmPassword) return true;
+      else {
+        this.message = environment.MSG_PASSWORD_DOES_NOT_MATCH;
+        return false;
+      }
+    } else {
+      this.message = environment.MSG_ALL_FIELDS_REQUIRED;
+      return false;
+    }
+  }
 }

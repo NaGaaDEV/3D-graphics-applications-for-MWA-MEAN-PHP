@@ -10,6 +10,8 @@ export const environment = {
 
   MSG_USER_REGISTERED: "User registered",
   MSG_ERROR_REGISTERING_USER: "There was problem registering this user",
+  MSG_PASSWORD_DOES_NOT_MATCH: "The does not match",
+  MSG_ALL_FIELDS_REQUIRED: "All fields are required",
 
   MSG_LOGIN_SUCCESSFUL: "Login successful",
   MSG_LOGIN_UNSUCCESSFUL: "Login unsuccessful",

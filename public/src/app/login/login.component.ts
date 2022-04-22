@@ -17,11 +17,14 @@ export class LoginComponent {
   constructor(private usersDataService:UsersDataService, private authService:AuthService, private navigator:Router) { }
 
   onLogin(form:NgForm):void {
-    this.usersDataService.loginUser(form.value).subscribe({
-      next: response => this.handleLoginNext(response),
-      error: err => this.loginFailed(),
-      complete: () => console.log("login done")      
-    })
+    if(this.isFormValid(form)) {
+      this.usersDataService.loginUser(form.value).subscribe({
+        next: response => this.handleLoginNext(response),
+        error: err => this.loginFailed(),
+        complete: () => console.log("login done")      
+      })      
+    }
+
   }
 
   private handleLoginNext(response:UserResponse):void {
@@ -35,5 +38,13 @@ export class LoginComponent {
   }
   private loginFailed():void {
     this.message = environment.MSG_LOGIN_UNSUCCESSFUL
+  }
+
+  isFormValid(form:NgForm):boolean {
+    if(form.value.username && form.value.password)  return true;
+    else {
+      this.message = environment.MSG_ALL_FIELDS_REQUIRED;
+      return false;
+    }
   }
 }
