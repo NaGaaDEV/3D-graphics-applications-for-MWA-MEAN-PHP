@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -15,6 +15,9 @@ import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterUserComponent } from './register-user/register-user.component';
 import { NavComponent } from './nav/nav.component';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { TokenInterceptorService } from './token-interceptor.service';
+import { MessageAlertComponent } from './message-alert/message-alert.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,8 @@ import { NavComponent } from './nav/nav.component';
     FooterComponent,
     LoginComponent,
     RegisterUserComponent,
-    NavComponent
+    NavComponent,
+    MessageAlertComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,11 @@ import { NavComponent } from './nav/nav.component';
       {path: '**', component: PageNotFoundComponent}
     ])
   ],
-  providers: [],
+  providers: [
+    {provide: JWT_OPTIONS, useValue: JWT_OPTIONS},
+    JwtHelperService,
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -49,10 +49,6 @@ input {
     cursor: not-allowed;
 }
 
-.savingMessage {
-    margin-top: 4px;
-}
-
 .movie-input {
     display: flex;
 }

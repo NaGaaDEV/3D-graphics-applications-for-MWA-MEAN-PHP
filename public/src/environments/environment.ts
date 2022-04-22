@@ -7,11 +7,17 @@ export const environment = {
   BASE_API_URL: "add a base api url",
   APPS_API_ENDPOINT: "add apps endpoint",
   MOVIES_API_ENDPOINT: "add movies endpoint",
-  USER_API_ENDPOINT: "add user endpoint",
+  USER_LOGIN_API_ENDPOINT: "add user login endpoint",
   REGISTER_API_ENDPOINT: "add registration endpoint",
+
+  TOKEN_KEY_ON_LOCAL_STORAGE: "login-token",
 
   MSG_USER_REGISTERED: "",
   MSG_ERROR_REGISTERING_USER: "",
+
+  MSG_LOGIN_SUCCESSFUL: "Login successful",
+  MSG_LOGIN_UNSUCCESSFUL: "Login unsuccessful",
+  MSG_LOGIN_REQUIRED: "Login required",
 
   MSG_APP_SAVED: "",
   MSG_ERROR_SAVING_APP: "",

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { App } from '../app.model';
 import { AppsDataService } from '../apps-data.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-ddd-app',
@@ -14,7 +15,9 @@ export class DDDAppComponent implements OnInit {
 
   app!:App;
 
-  constructor(private appsDataService:AppsDataService, private router:ActivatedRoute) { }
+  get isLoggedIn() { return this.authService.isLoggedIn; }
+
+  constructor(private appsDataService:AppsDataService, private authService:AuthService, private router:ActivatedRoute) { }
 
   ngOnInit(): void {
     this.getApp();

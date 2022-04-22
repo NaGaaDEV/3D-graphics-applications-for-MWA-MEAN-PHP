@@ -21,7 +21,7 @@ export class AppsDataService {
   }
 
   getOneMovie(appId:string, movieId:string):Observable<Movie> {
-    return this.httpClient.get<Movie>(environment.BASE_API_URL+`${environment.APPS_API_ENDPOINT}/${appId}/${environment.MOVIES_API_ENDPOINT}/${movieId}`)
+    return this.httpClient.get<Movie>(environment.BASE_API_URL+`${environment.APPS_API_ENDPOINT}/${appId}${environment.MOVIES_API_ENDPOINT}/${movieId}`)
   }
 
   searchAppByName(query:{name:string}):Observable<App[]> {

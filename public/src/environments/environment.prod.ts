@@ -3,11 +3,17 @@ export const environment = {
   BASE_API_URL: "http://localhost:3000/api",
   APPS_API_ENDPOINT: "/apps",
   MOVIES_API_ENDPOINT: "/movies",
-  USER_API_ENDPOINT: "/users",
+  USER_LOGIN_API_ENDPOINT: "/users/login",
   REGISTER_API_ENDPOINT: "/users/register",
+
+  TOKEN_KEY_ON_LOCAL_STORAGE: "login-token",
 
   MSG_USER_REGISTERED: "User registered",
   MSG_ERROR_REGISTERING_USER: "There was problem registering this user",
+
+  MSG_LOGIN_SUCCESSFUL: "Login successful",
+  MSG_LOGIN_UNSUCCESSFUL: "Login unsuccessful",
+  MSG_LOGIN_REQUIRED: "Login required",
 
   MSG_APP_SAVED: "The application has been saved",
   MSG_ERROR_SAVING_APP: "There was problem saving the app",

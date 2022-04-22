@@ -1,8 +1,9 @@
+<app-message-alert [message]="message"></app-message-alert>
 <h1 class="main-title">3D Computer Graphics Applications</h1>
 
 <div class="container action-bar">
     <app-search></app-search>
-    <button routerLink="manage">+ Add App</button>
+    <button (click)="onAddApp()">+ Add App</button>
 </div>
 
 <div *ngFor="let app of apps" class="card border">

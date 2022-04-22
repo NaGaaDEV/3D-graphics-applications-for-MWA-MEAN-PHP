@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { App } from '../app.model';
 import { AppsDataService } from '../apps-data.service';
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -24,32 +25,38 @@ export class ManageAppComponent implements OnInit {
   app!:App;
 
   saving:boolean = false;
-  savingMessage:string = "";
+  message:string = "";
 
-  constructor(private fb:FormBuilder, private appsDataService:AppsDataService, private router:ActivatedRoute, private navigator:Router, private location:Location) { }
+  get isLoggedIn() { return this.authService.isLoggedIn; }
+
+  constructor(private fb:FormBuilder, private appsDataService:AppsDataService, private authService:AuthService, private router:ActivatedRoute, private navigator:Router, private location:Location) { }
 
   ngOnInit(): void {
-    this.appId = this.router.snapshot.params["appId"];
-    
-    this.appForm = this.fb.group({
-      name: this.fb.control('', Validators.required),
-      initialReleaseDate: this.fb.control(''),
-      logo: this.fb.control(''),
-      movies: this.fb.array([])
-    });
-    this.movieForm = this.fb.group({
-      _id: this.fb.control('', Validators.required),
-      title: this.fb.control('', Validators.required),
-      trailer: this.fb.control('', [Validators.minLength(11), Validators.maxLength(11)])  
-    });
-    this.newMoviesForm = this.fb.group({
-      movies: this.fb.array([])
-    });
-    if(this.appId) { this.getApp(); }
+    if(this.isLoggedIn) {
+      this.appId = this.router.snapshot.params["appId"];
+      
+      this.appForm = this.fb.group({
+        name: this.fb.control('', Validators.required),
+        initialReleaseDate: this.fb.control(''),
+        logo: this.fb.control(''),
+        movies: this.fb.array([])
+      });
+      this.movieForm = this.fb.group({
+        _id: this.fb.control('', Validators.required),
+        title: this.fb.control('', Validators.required),
+        trailer: this.fb.control('', [Validators.minLength(11), Validators.maxLength(11)])  
+      });
+      this.newMoviesForm = this.fb.group({
+        movies: this.fb.array([])
+      });
+      if(this.appId) { this.getApp(); }
+    } else {
+      this.message = environment.MSG_LOGIN_REQUIRED;
+    }
   }
 
   onAdd():void {
-    this.savingMessage = environment.MSG_SAVING
+    this.message = environment.MSG_SAVING
     this.saving = true;
     this.appForm.value.movies = this.appForm.value.movies || "";
     this.appsDataService.addOneApp(this.appForm.value).subscribe({
@@ -60,7 +67,7 @@ export class ManageAppComponent implements OnInit {
   }
 
   onUpdate():void {
-    this.savingMessage = environment.MSG_SAVING;
+    this.message = environment.MSG_SAVING;
     this.saving = true;
     
     let patchedAppData = { ...this.app, ...this.appForm.value, movies:[...this.appForm.value.movies, ...this.newMovies.value] };
@@ -81,11 +88,11 @@ export class ManageAppComponent implements OnInit {
   };
   private _onAppServiceWriteError = (err: any) => {
     this.saving = false;
-    this.savingMessage = environment.MSG_ERROR_SAVING_APP;
+    this.message = environment.MSG_ERROR_SAVING_APP;
   };
   private _onAppServiceWriteComplete = () => {
     this.saving = false;
-    this.savingMessage = environment.MSG_APP_SAVED;
+    this.message = environment.MSG_APP_SAVED;
     this.location.replaceState("/apps/manage/"+this.appId);
   };
 

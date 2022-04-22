@@ -1,6 +1,6 @@
 <ng-container *ngIf="app">
     <div class="app-header">
-        <h1 class="main-title">{{app.name}} <small [routerLink]="['/apps/manage', app._id]" class="edit">✎ edit</small></h1>
+        <h1 class="main-title">{{app.name}} <small *ngIf="isLoggedIn" [routerLink]="['/apps/manage', app._id]" class="edit">✎ edit</small></h1>
     </div>
     <ng-container *ngIf="app.movies">
         <h3 class="sub-title">Movies made with {{app.name}}</h3>

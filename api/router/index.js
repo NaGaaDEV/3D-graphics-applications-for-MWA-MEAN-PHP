@@ -1,22 +1,6 @@
 const router = require("express").Router();
 
-const appController = require("../controller/app.controller.js");
-const movieController = require("../controller/movie.controller.js");
-
-router.route("/apps")
-.get(appController.getAll)
-.post(appController.addOne);
-
-router.route("/apps/:appId")
-.get(appController.getOne)
-.put(appController.replaceOne)
-.patch(appController.updateOne)
-.delete(appController.deleteOne);
-
-router.route("/apps/:appId/movies")
-.get(movieController.getAll)
-
-router.route("/apps/:appId/movies/:movieId")
-.get(movieController.getOne)
+router.use("/apps", require("./apps"))
+router.use("/users", require("./users"));
 
 module.exports = router;

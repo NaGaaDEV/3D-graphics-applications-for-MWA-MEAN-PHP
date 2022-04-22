@@ -10,13 +10,18 @@ import { User } from './user.model';
 })
 export class UsersDataService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private httpClient:HttpClient) { }
 
-  loginUser(user:User):Observable<User> {
-    return this.http.post<User>(environment.BASE_API_URL+environment.USER_API_ENDPOINT, user);
+  loginUser(user:User):Observable<UserResponse> {
+    return this.httpClient.post<UserResponse>(environment.BASE_API_URL+environment.USER_LOGIN_API_ENDPOINT, user);
   }
 
-  registerUser(user:User):Observable<User> {
-    return this.http.post<User>(environment.BASE_API_URL+environment.REGISTER_API_ENDPOINT, user)
+  registerUser(user:User):Observable<UserResponse> {
+    return this.httpClient.post<UserResponse>(environment.BASE_API_URL+environment.REGISTER_API_ENDPOINT, user)
   }
+}
+
+export class UserResponse {
+  success!: boolean;
+  token!: string;
 }

@@ -4,7 +4,9 @@
 </form>
 
 <ng-container *ngIf="apps">
-    <h3 class="result-text">Result</h3>
-    <a *ngFor="let app of apps" [routerLink]="['/apps', app._id]">{{app.name}}</a>
+    <h3 class="result-text">Result ({{apps.length}})</h3>
+    <div *ngFor="let app of apps" class="search-result">
+        <a [routerLink]="['/apps', app._id]">{{app.name}}</a><br><br>
+    </div>
     <hr>
 </ng-container>
