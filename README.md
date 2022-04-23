@@ -3,18 +3,8 @@ A MEAN application that show a list of 3D graphics applications and movies that 
 
 Run `npm run startBoth` to start backend and frontend   
 
-Implemented
--Interceptor
--Services
--Authentication
--Template Driven Forms
--Reactive Forms
--FormArray
--Form Validation
--Pipe
--Node with Express
--Mongoose
--Backend hardening
+Implemented - Interceptor • Services • Authentication • Template Driven Forms • Reactive Forms • FormArray • Form Validation • Pipe • Node with Express • Mongoose   
+ • Backend hardening   
 
 
 URL paths  
